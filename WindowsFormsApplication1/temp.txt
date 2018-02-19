@@ -1,0 +1,145 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+
+namespace NASP
+{
+
+
+    public class AVLStablo
+    {
+
+
+        private Cvor korijen;
+        public AVLStablo()
+        {
+            this.korijen = null;
+        }
+
+       
+        public bool Dodaj(int novaVrijednost)
+        {
+            bool dodavanjeUspjesno = false;
+            
+            // dodavanje u desno dijete
+            if (novaVrijednost > vrijednost)
+            {
+                if (desnoDijete == null)
+                {
+                    this.desnoDijete = new AVLStablo(novaVrijednost);
+                    desnoDijete.Roditelj = this;
+                    faktorRavnoteze = faktorRavnoteze + 1;
+                    // Balansiraj
+                    dodavanjeUspjesno = true;
+                }
+                else
+                {
+
+                    dodavanjeUspjesno = desnoDijete.Dodaj(novaVrijednost);
+                    if (dodavanjeUspjesno)
+                    {
+                        desnoDijete.Roditelj = this;
+                        faktorRavnoteze = faktorRavnoteze + 1;
+                        // Balansiraj
+                    }
+
+                }
+            }
+
+            // dodavanje u lijevo dijete
+            else if (novaVrijednost < vrijednost)
+            {
+                if (lijevoDijete == null)
+                {
+                    this.lijevoDijete = new AVLStablo(novaVrijednost);
+                    lijevoDijete.Roditelj = this;
+                    faktorRavnoteze = faktorRavnoteze - 1;
+                    // Balansiraj
+                    dodavanjeUspjesno = true;
+                }
+                else
+                {
+                    dodavanjeUspjesno = lijevoDijete.Dodaj(novaVrijednost);
+                    if (dodavanjeUspjesno)
+                    {
+                        lijevoDijete.Roditelj = this;
+                        faktorRavnoteze = faktorRavnoteze - 1;
+                        // Balansiraj
+                    }
+                }
+            }
+
+            return dodavanjeUspjesno;
+        }
+
+        public TreeNode DohvatiCvorove()
+        {
+            TreeNode cvor = new TreeNode("Vrijednost: " + this.vrijednost.ToString() + 
+                                " Faktor: " + this.faktorRavnoteze.ToString());
+            if (desnoDijete != null)
+            {
+                cvor.Nodes.Add(this.desnoDijete.DohvatiCvorove());
+            }
+            else
+            {
+                cvor.Nodes.Add("*prazno*");
+            }
+
+            if (lijevoDijete != null)
+            {
+                cvor.Nodes.Add(this.lijevoDijete.DohvatiCvorove());
+            }
+            else
+            {
+                cvor.Nodes.Add("*prazno*");
+            }
+
+            return cvor;
+        }
+
+        public void desnaRotacija()
+        {
+           
+        }
+
+        private void lijevaRotacija()
+        {
+
+        }
+
+    }
+}
+
+
+//////////////////////////////
+  private Cvor nadiPraznoMjesto(Cvor pocetak, int vrijednost)
+        {
+            Cvor privremeniCvor = pocetak;
+
+            if (privremeniCvor.Vrijednost > vrijednost)
+            {
+                if (privremeniCvor.DesnoDijete == null)
+                {
+                    return privremeniCvor;
+                }
+                else
+                {
+                    privremeniCvor = nadiPraznoMjesto(privremeniCvor.DesnoDijete, vrijednost);
+                }
+            }
+
+            else if (privremeniCvor.Vrijednost < vrijednost)
+            {
+                if (privremeniCvor.LijevoDijete == null)
+                {
+                    return privremeniCvor;
+                }
+
+                else
+                {
+                    privremeniCvor = nadiPraznoMjesto(privremeniCvor.LijevoDijete, vrijednost);
+                }
+            }
+
+            return privremeniCvor;

@@ -8,13 +8,13 @@ namespace NASP
     public partial class Form1 : Form
     {
         private String _lokacija;
-        private AvlStablo _stablo;
+        private AVLTree _tree;
         public Form1()
         {
             InitializeComponent();
             numericUpDown1.Maximum = Int32.MaxValue;
             numericUpDown1.Minimum = Int32.MinValue;
-            _stablo = new AvlStablo();
+            _tree = new AVLTree();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -29,9 +29,9 @@ namespace NASP
             }
 
             // otvaranje datoteke
-            var dat = new Datoteka(_lokacija);
+            var dat = new FileReader(_lokacija);
             // čitanje datoteke
-            var brojevi = dat.Citaj();
+            var brojevi = dat.Read();
             
             
             // obriši prijašnje stablo
@@ -40,7 +40,7 @@ namespace NASP
             //dodaj elemente iz datoteke u stablo
             foreach (var broj in brojevi)
             {
-                _stablo.Dodaj(broj);
+                _tree.Add(broj);
             }
 
             // prikaži stablo u sučelju
@@ -50,19 +50,19 @@ namespace NASP
         private void PrikazStabla()
         {
             treeView1.Nodes.Clear();
-            treeView1.Nodes.Add(_stablo.DohvatiCvorove());
+            treeView1.Nodes.Add(_tree.GetNodes());
             treeView1.ExpandAll();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            _stablo.Dodaj((int)numericUpDown1.Value);
+            _tree.Add((int)numericUpDown1.Value);
             PrikazStabla();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            _stablo.BrisiCvor((int)numericUpDown1.Value);
+            _tree.RemovesNode((int)numericUpDown1.Value);
             PrikazStabla();
         }
 
@@ -73,7 +73,7 @@ namespace NASP
 
         private void ObrisiSve()
         {
-            _stablo = new AvlStablo();
+            _tree = new AVLTree();
             PrikazStabla();
         }
 
